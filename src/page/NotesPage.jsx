@@ -4,6 +4,7 @@ import ModalNote from '../components/ModalNote';
 
 const Notes = () => {
   const [isOpen, setOpen] = React.useState(false);
+  const [isOpenSort, setOpenSort] = React.useState(false);
 
   React.useEffect(() => {
     if (isOpen) {
@@ -29,8 +30,11 @@ const Notes = () => {
                 3
               </span>
             </h1>
-            <div className='flex'>
-              <button className='font-roboto text-sm bg-[#E2EBFA] px-2 py-2 rounded-[7px] text-[#0760FB] hover:bg-[#d5e4ff] mr-2'>
+            <div className='flex relative'>
+              <button
+                onClick={() => setOpenSort(!isOpenSort)}
+                className='font-roboto  text-sm bg-[#E2EBFA] px-2 py-2 rounded-[7px] text-[#0760FB] hover:bg-[#d5e4ff] mr-2'
+              >
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
                   fill='none'
@@ -46,6 +50,36 @@ const Notes = () => {
                   />
                 </svg>
               </button>
+              {isOpenSort && (
+                <div className='overflow-hidden popup absolute w-[150px]  bg-white right-[12rem] top-0 rounded-xl shadow-2xl'>
+                  <ul className='font-roboto flex flex-col  text-lg text-[#6F749C] font-normal'>
+                    <li className=''>
+                      <button
+                        onClick={() => console.log('edit')}
+                        className='hover:text-[#0D0D17] p-1 w-full py-1'
+                      >
+                        по алфавиту
+                      </button>
+                    </li>
+                    <li className=''>
+                      <button
+                        onClick={() => console.log('priority')}
+                        className='hover:text-[#0D0D17] p-1 w-full py-1'
+                      >
+                        по дате
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        onClick={() => console.log('delete')}
+                        className=' hover:text-[#0D0D17] p-1 w-full py-1'
+                      >
+                        по категории
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              )}
               <button
                 onClick={onCLickOpen}
                 className='font-roboto text-sm bg-[#E2EBFA] px-2 py-2 rounded-[7px] text-[#0760FB] hover:bg-[#d5e4ff]'
