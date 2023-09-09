@@ -3,8 +3,16 @@ import { useState, forwardRef } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
+import { addNote } from '../Redux/noteCardSlice';
+import { useDispatch, useSelector } from 'react-redux';
+
 const ModalNote = ({ onCLickOpen }) => {
+  const { note } = useSelector((state) => state.cardSlice);
+
+  const dispatch = useDispatch();
   const [isOpen, setOpen] = React.useState(false);
+  const [inputTitleValue, setInputTitleValue] = React.useState('');
+  const [inputDescValue, setInputDescValue] = React.useState('');
 
   const [startDate, setStartDate] = useState(false);
   const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
@@ -31,6 +39,13 @@ const ModalNote = ({ onCLickOpen }) => {
     </button>
   ));
 
+  const handleInputTitleValue = (e) => {
+    return setInputTitleValue(e.target.value);
+  };
+  const handleInputDescValue = (e) => {
+    return setInputDescValue(e.target.value);
+  };
+
   return (
     <>
       <div className='opacity-80 bg-slate-900 w-full h-[100vh] fixed right-0 top-0 overflow-hidden flex flex-col items-center justify-center '></div>
@@ -42,6 +57,7 @@ const ModalNote = ({ onCLickOpen }) => {
                 placeholder='Название записи...'
                 className='font-roboto w-auto outline-none focus:outline-none text-xl'
                 type='text'
+                onChange={handleInputTitleValue}
               />
               <div className='h-[1px] w-full bg-[#F3F3F8] my-3'></div>
               <textarea
@@ -51,6 +67,7 @@ const ModalNote = ({ onCLickOpen }) => {
                 id=''
                 cols='30'
                 rows='3'
+                onChange={handleInputDescValue}
               ></textarea>
             </div>
 
@@ -162,7 +179,13 @@ const ModalNote = ({ onCLickOpen }) => {
                 >
                   Закрыть
                 </button>
-                <button className='transition duration-[45ms] hover:bg-[#804eee] bg-[#6a30e7] py-1 flex items-center  rounded-lg px-3 text-white font-roboto font-medium'>
+                <button
+                  onClick={() => {
+                    const date = startDate.toLocaleDateString('ru-RU');
+                    dispatch(addNote({ inputTitleValue, inputDescValue, date }));
+                  }}
+                  className='transition duration-[45ms] hover:bg-[#804eee] bg-[#6a30e7] py-1 flex items-center  rounded-lg px-3 text-white font-roboto font-medium'
+                >
                   Добавить
                 </button>
               </div>

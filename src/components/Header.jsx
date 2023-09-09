@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
   return (
@@ -26,15 +27,21 @@ const Header = () => {
           </svg>
           TODO
         </span>
-        <div className=''>
-          <button className='relative text-[#343a40] font-roboto h-full group mr-3'>
+        <div className='flex items-center h-full justify-center'>
+          <Link
+            to={'/'}
+            className='relative text-[#343a40] font-roboto h-full group mr-3 flex items-center'
+          >
             Главная
             <span className='absolute left-0 bottom-0 w-full h-[2px] bg-[#682EE4] transform scale-x-0 origin-bottom transition-transform group-hover:scale-x-100'></span>
-          </button>
-          <button className='relative text-[#343a40] font-roboto h-full group'>
+          </Link>
+          <Link
+            to={'/category'}
+            className='relative text-[#343a40] font-roboto h-full group flex items-center'
+          >
             Категории
             <span className='absolute left-0 bottom-0 w-full h-[2px] bg-[#682EE4] transform scale-x-0 origin-bottom transition-transform group-hover:scale-x-100'></span>
-          </button>
+          </Link>
         </div>
       </div>
     </header>
