@@ -3,16 +3,50 @@ import { useState, forwardRef } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-import { addNote } from '../Redux/noteCardSlice';
+import { addNote } from '../Redux/NoteCardSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import JobCategory from '../assets/svg/jobCategory';
+import DefaultCategory from '../assets/svg/defaultCategory';
+import HomeCategory from '../assets/svg/homeCategory';
+import PersonalCategory from '../assets/svg/personalCategory';
+import StudyCategory from '../assets/svg/studyCategory';
+import FinanceCategory from '../assets/svg/financeCategory';
+import ProjectCategory from '../assets/svg/projectCategory';
+import FavCategory from '../assets/svg/favCategory';
+import IdeaCategory from '../assets/svg/ideaCategory';
+import axios from 'axios';
 
 const ModalNote = ({ onCLickOpen }) => {
-  const { note } = useSelector((state) => state.cardSlice);
-
   const dispatch = useDispatch();
   const [isOpen, setOpen] = React.useState(false);
   const [inputTitleValue, setInputTitleValue] = React.useState('');
   const [inputDescValue, setInputDescValue] = React.useState('');
+  const [category, setCategory] = React.useState(false);
+  // const [categorySvg, setCategorySvg] = React.useState(false);
+
+  const categoryList = [
+    ['Работа', <JobCategory w={5} h={5}></JobCategory>],
+    ['Дом', <HomeCategory w={5} h={5}></HomeCategory>],
+    ['Личное', <PersonalCategory w={5} h={5}></PersonalCategory>],
+    ['Учеба', <StudyCategory w={5} h={5}></StudyCategory>],
+    ['Финансы', <FinanceCategory w={5} h={5}></FinanceCategory>],
+    ['Проекты', <ProjectCategory w={5} h={5}></ProjectCategory>],
+    ['Важные', <FavCategory w={5} h={5}></FavCategory>],
+    ['Идеи', <IdeaCategory w={5} h={5}></IdeaCategory>], //
+  ];
+
+  const sendDataToMockAPI = async (data) => {
+    try {
+      // Замените 'your-api-endpoint' на URL вашего сервера Mock API.
+      const response = await axios.post('https://6507260b3a38daf4803f2b7c.mockapi.io/todo', data);
+
+      // Обработайте ответ от сервера, если необходимо.
+      console.log('Успешно отправлено на сервер:', response.data);
+    } catch (error) {
+      // Обработайте ошибку, если запрос не удался.
+      console.error('Ошибка при отправке данных:', error);
+    }
+  };
 
   const [startDate, setStartDate] = useState(false);
   const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
@@ -44,6 +78,12 @@ const ModalNote = ({ onCLickOpen }) => {
   };
   const handleInputDescValue = (e) => {
     return setInputDescValue(e.target.value);
+  };
+
+  const handleCategoryBtn = (e) => {
+    setOpen(false);
+    // setCategorySvg(e);
+    return setCategory(e);
   };
 
   return (
@@ -80,97 +120,41 @@ const ModalNote = ({ onCLickOpen }) => {
                   customInput={<ExampleCustomInput />}
                   renderDayContents={(day, date) => <span className='font-roboto'>{day}</span>}
                 />
-                <button
-                  onClick={() => setOpen(!isOpen)}
-                  className='relative py-1 hover:border-[#c8c8d1] flex items-center mr-3 border-[1px] border-[#e7e7ee] rounded-lg px-3 text-[#6F749C] font-roboto '
-                >
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    fill='none'
-                    viewBox='0 0 24 24'
-                    strokeWidth={1.5}
-                    stroke='currentColor'
-                    className='w-5 h-5 text-[#6F749C] mr-2'
+                <div className='relative'>
+                  <button
+                    onClick={() => setOpen(!isOpen)}
+                    className=' py-1 hover:border-[#c8c8d1] flex items-center mr-3 border-[1px] border-[#e7e7ee] rounded-lg px-3 text-[#6F749C] font-roboto '
                   >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      d='M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z'
-                    />
-                    <path strokeLinecap='round' strokeLinejoin='round' d='M6 6h.008v.008H6V6z' />
-                  </svg>
-                  Категория
+                    {category === false ? (
+                      <>
+                        <DefaultCategory w={5} h={5}></DefaultCategory>
+                        <span className='ml-2'>Категория</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className='mr-2'>{category[1]}</span> <span>{category[0]}</span>
+                      </>
+                    )}
+                  </button>
                   {isOpen && (
-                    <div className=' absolute w-[150px]  bg-white left-20 top--16 rounded-xl shadow-2xl'>
-                      <ul className='font-roboto flex flex-col p-2 text-lg text-[#6F749C] font-normal'>
-                        <li className=''>
-                          <button
-                            onClick={() => console.log('edit')}
-                            className='hover:text-[#0D0D17] p-1'
-                          >
-                            Работа
-                          </button>
-                        </li>
-                        <li className=''>
-                          <button
-                            onClick={() => console.log('priority')}
-                            className='hover:text-[#0D0D17] p-1'
-                          >
-                            Дом
-                          </button>
-                        </li>
-                        <li>
-                          <button
-                            onClick={() => console.log('delete')}
-                            className='hover:text-[#0D0D17] p-1'
-                          >
-                            Личное
-                          </button>
-                        </li>
-                        <li>
-                          <button
-                            onClick={() => console.log('delete')}
-                            className='hover:text-[#0D0D17] p-1'
-                          >
-                            Учеба
-                          </button>
-                        </li>
-                        <li>
-                          <button
-                            onClick={() => console.log('delete')}
-                            className='hover:text-[#0D0D17] p-1'
-                          >
-                            Финансы
-                          </button>
-                        </li>
-                        <li>
-                          <button
-                            onClick={() => console.log('delete')}
-                            className='hover:text-[#0D0D17] p-1'
-                          >
-                            Проекты
-                          </button>
-                        </li>
-                        <li>
-                          <button
-                            onClick={() => console.log('delete')}
-                            className='hover:text-[#0D0D17] p-1'
-                          >
-                            Важные
-                          </button>
-                        </li>
-                        <li>
-                          <button
-                            onClick={() => console.log('delete')}
-                            className='hover:text-[#0D0D17] p-1'
-                          >
-                            Идеи
-                          </button>
-                        </li>
+                    <div className=' absolute w-[150px]  bg-white right-0 top-[40px] rounded-xl shadow-2xl'>
+                      <ul className='font-roboto flex flex-col py-2 text-lg text-[#6F749C] font-normal'>
+                        {categoryList.map((item, key) => {
+                          return (
+                            <li key={key} className=''>
+                              <button
+                                onClick={() => handleCategoryBtn(item)}
+                                className='hover:text-[#0D0D17] p-1 w-full flex items-center justify-left'
+                              >
+                                <span className='mr-2'>{item[1]}</span> <span>{item[0]}</span>
+                              </button>
+                            </li>
+                          );
+                        })}
                       </ul>
                     </div>
                   )}
-                </button>
+                </div>
               </div>
               <div className='flex'>
                 <button
@@ -182,7 +166,17 @@ const ModalNote = ({ onCLickOpen }) => {
                 <button
                   onClick={() => {
                     const date = startDate.toLocaleDateString('ru-RU');
-                    dispatch(addNote({ inputTitleValue, inputDescValue, date }));
+                    const noteCategory = category[0];
+                    // dispatch(addNote({ inputTitleValue, inputDescValue, date, noteCategory }));
+                    const axiosData = {
+                      inputTitleValue: inputTitleValue,
+                      inputDescValue: inputDescValue,
+                      date: date,
+                      noteCategory: noteCategory,
+                      checked: false,
+                      priority: false,
+                    };
+                    sendDataToMockAPI(axiosData);
                   }}
                   className='transition duration-[45ms] hover:bg-[#804eee] bg-[#6a30e7] py-1 flex items-center  rounded-lg px-3 text-white font-roboto font-medium'
                 >

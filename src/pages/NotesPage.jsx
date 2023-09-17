@@ -1,10 +1,19 @@
 import React from 'react';
 import NoteCard from '../components/NoteCard';
 import ModalNote from '../components/ModalNote';
+import ModalDeleteCardWarning from '../components/ModalDeleteCardWarning';
+import axios from 'axios';
+
+import { useDispatch, useSelector } from 'react-redux';
+import { addNote } from '../Redux/NoteCardSlice';
 
 const Notes = () => {
   const [isOpen, setOpen] = React.useState(false);
   const [isOpenSort, setOpenSort] = React.useState(false);
+  const [isMounted, setMounted] = React.useState(false);
+  const dispatch = useDispatch();
+
+  const { note } = useSelector((state) => state.cardSlice);
 
   React.useEffect(() => {
     if (isOpen) {
@@ -14,10 +23,20 @@ const Notes = () => {
     }
   }, [isOpen]);
 
+  React.useEffect(() => {
+    if (isMounted === false ?? note.length === 0) {
+      const fetchNotes = async () => {
+        const { data } = await axios.get('https://6507260b3a38daf4803f2b7c.mockapi.io/todo');
+        dispatch(addNote(data));
+      };
+      fetchNotes();
+      setMounted(true);
+    }
+  }, [isMounted, note, dispatch]);
+
   const onCLickOpen = () => {
     isOpen === true ? setOpen(false) : setOpen(true);
   };
-  console.log(isOpen);
 
   return (
     <div className='container h-[100rem] mt-10'>
@@ -27,7 +46,7 @@ const Notes = () => {
             <h1 className='font-roboto font-medium text-xl text-[#0D0D17] flex items-center'>
               Записи
               <span className=' bg-[#F5F5F9] text-sm px-2 rounded-md ml-2 text-[#6F749C] font-medium font-roboto'>
-                3
+                {note.length}
               </span>
             </h1>
             <div className='flex relative'>
@@ -89,9 +108,9 @@ const Notes = () => {
             </div>
           </div>
         </div>
-        <NoteCard></NoteCard>
-        <NoteCard></NoteCard>
-        <NoteCard></NoteCard>
+        {note.map((obj) => (
+          <NoteCard obj={obj}></NoteCard>
+        ))}
         <div className='completed'>
           <div className='-notes font-roboto my-3 font-meidum text-[#343a40]'>Выполненные</div>
           <div className='note-card border-[1px] border-[#F3F3F8] mt-2 rounded-md px-2'>

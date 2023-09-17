@@ -9,7 +9,8 @@ export const noteCardSlice = createSlice({
   initialState,
   reducers: {
     addNote: (state, action) => {
-      state.note.push(action.payload);
+      const obj = action.payload;
+      state.note.push(...obj);
     },
     decrement: (state) => {
       state.value -= 1;
