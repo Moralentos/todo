@@ -16,11 +16,14 @@ import FavCategory from '../assets/svg/favCategory';
 import IdeaCategory from '../assets/svg/ideaCategory';
 import axios from 'axios';
 
+import { fetchNotes } from '../Redux/NoteCardSlice';
+
 const ModalNote = ({ onCLickOpen }) => {
   const dispatch = useDispatch();
   const [isOpen, setOpen] = React.useState(false);
   const [inputTitleValue, setInputTitleValue] = React.useState('');
   const [inputDescValue, setInputDescValue] = React.useState('');
+  const [addTaskBtn, setAddTaskBtn] = React.useState(false);
   const [category, setCategory] = React.useState(false);
   // const [categorySvg, setCategorySvg] = React.useState(false);
 
@@ -159,12 +162,13 @@ const ModalNote = ({ onCLickOpen }) => {
               <div className='flex'>
                 <button
                   onClick={onCLickOpen}
-                  className='hover:border-[#c8c8d1] flex items-center mr-3 border-[1px] border-[#e7e7ee] rounded-lg px-3 text-[#6F749C] font-roboto '
+                  className='hover:border-[#c8c8d1] flex items-center mr-3 border-[1px] border-[#e7e7ee] rounded-lg py-1 px-3 text-[#6F749C] font-roboto '
                 >
                   Закрыть
                 </button>
                 <button
-                  onClick={() => {
+                  onClick={async () => {
+                    setAddTaskBtn(true);
                     const date = startDate.toLocaleDateString('ru-RU');
                     const noteCategory = category[0];
                     // dispatch(addNote({ inputTitleValue, inputDescValue, date, noteCategory }));
@@ -176,11 +180,14 @@ const ModalNote = ({ onCLickOpen }) => {
                       checked: false,
                       priority: false,
                     };
-                    sendDataToMockAPI(axiosData);
+                    await sendDataToMockAPI(axiosData);
+                    dispatch(fetchNotes());
+                    setAddTaskBtn(false);
+                    onCLickOpen();
                   }}
                   className='transition duration-[45ms] hover:bg-[#804eee] bg-[#6a30e7] py-1 flex items-center  rounded-lg px-3 text-white font-roboto font-medium'
                 >
-                  Добавить
+                  {addTaskBtn === false ? 'Добавить' : <span class='loader mx-4 py-1'></span>}
                 </button>
               </div>
             </div>

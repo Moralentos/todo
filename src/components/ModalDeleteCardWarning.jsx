@@ -3,140 +3,99 @@ import { useState, forwardRef } from 'react';
 
 import { addNote } from '../Redux/NoteCardSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { fetchNotes } from '../Redux/NoteCardSlice';
+import axios from 'axios';
 
-const ModalNote = ({ onCLickOpen }) => {
+const ModalNote = ({ setOpenDeleteTask, obj, taskId }) => {
   const dispatch = useDispatch();
-  const [isOpen, setOpen] = React.useState(true);
+
+  const onClickDeleteTask = async () => {
+    const fetchDeleteNote = async (id) => {
+      try {
+        await axios.delete(`https://6507260b3a38daf4803f2b7c.mockapi.io/todo/${id}`);
+        console.log('Удален таск с id:', id);
+      } catch (error) {
+        console.error('Ошибка при отправке данных:', error);
+      }
+    };
+
+    await fetchDeleteNote(taskId);
+    dispatch(fetchNotes());
+    setOpenDeleteTask(false);
+  };
 
   return (
     <>
       <div className='opacity-80 bg-slate-900 w-full h-[100vh] fixed right-0 top-0 overflow-hidden flex flex-col items-center justify-center '></div>
-      <div className='z-1 w-full h-[100vh] fixed right-0 bottom-[10rem] overflow-hidden flex flex-col items-center justify-center '>
-        <div className='content rounded-xl  w-[600px] bg-[#FFFFFF] p-6 flex justify-between  '>
-          <div className='w-full'>
-            <div className='flex flex-col w-full'>
-              <input
-                placeholder='Название записи...'
-                className='font-roboto w-auto outline-none focus:outline-none text-xl'
-                type='text'
-              />
-              <div className='h-[1px] w-full bg-[#F3F3F8] my-3'></div>
-              <textarea
-                className='font-roboto resize-none w-full focus:outline-none text-sm'
-                placeholder='Описание...'
-                name=''
-                id=''
-                cols='30'
-                rows='3'
-              ></textarea>
-            </div>
-
-            <div className='flex justify-between items-center mt-2'>
-              <div className='flex'>
-                <button
-                  onClick={() => setOpen(!isOpen)}
-                  className='relative py-1 hover:border-[#c8c8d1] flex items-center mr-3 border-[1px] border-[#e7e7ee] rounded-lg px-3 text-[#6F749C] font-roboto '
-                >
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    fill='none'
-                    viewBox='0 0 24 24'
-                    strokeWidth={1.5}
-                    stroke='currentColor'
-                    className='w-5 h-5 text-[#6F749C] mr-2'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      d='M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z'
-                    />
-                    <path strokeLinecap='round' strokeLinejoin='round' d='M6 6h.008v.008H6V6z' />
-                  </svg>
-                  Категория
-                  {isOpen && (
-                    <div className=' absolute w-[150px]  bg-white left-20 top--16 rounded-xl shadow-2xl'>
-                      <ul className='font-roboto flex flex-col p-2 text-lg text-[#6F749C] font-normal'>
-                        <li className=''>
-                          <button
-                            onClick={() => console.log('edit')}
-                            className='hover:text-[#0D0D17] p-1'
-                          >
-                            Работа
-                          </button>
-                        </li>
-                        <li className=''>
-                          <button
-                            onClick={() => console.log('priority')}
-                            className='hover:text-[#0D0D17] p-1'
-                          >
-                            Дом
-                          </button>
-                        </li>
-                        <li>
-                          <button
-                            onClick={() => console.log('delete')}
-                            className='hover:text-[#0D0D17] p-1'
-                          >
-                            Личное
-                          </button>
-                        </li>
-                        <li>
-                          <button
-                            onClick={() => console.log('delete')}
-                            className='hover:text-[#0D0D17] p-1'
-                          >
-                            Учеба
-                          </button>
-                        </li>
-                        <li>
-                          <button
-                            onClick={() => console.log('delete')}
-                            className='hover:text-[#0D0D17] p-1'
-                          >
-                            Финансы
-                          </button>
-                        </li>
-                        <li>
-                          <button
-                            onClick={() => console.log('delete')}
-                            className='hover:text-[#0D0D17] p-1'
-                          >
-                            Проекты
-                          </button>
-                        </li>
-                        <li>
-                          <button
-                            onClick={() => console.log('delete')}
-                            className='hover:text-[#0D0D17] p-1'
-                          >
-                            Важные
-                          </button>
-                        </li>
-                        <li>
-                          <button
-                            onClick={() => console.log('delete')}
-                            className='hover:text-[#0D0D17] p-1'
-                          >
-                            Идеи
-                          </button>
-                        </li>
-                      </ul>
-                    </div>
-                  )}
-                </button>
+      <div className='z-12 w-full h-[100vh] fixed right-0 bottom-[10rem] overflow-hidden flex flex-col items-center justify-center '>
+        <div className='content rounded-xl  w-[450px] bg-[#FFFFFF]'>
+          <div className='content rounded-xl  w-[450px] bg-[#FFFFFF] p-6   '>
+            <div className='items-center flex-row justify-center'>
+              <div className='flex items-center justify-center'>
+                <div className='mb-5 w-[80px] h-[80px] flex items-center justify-center bg-[#FDF4F4] rounded-full'>
+                  <div className=' w-[60px] h-[60px] flex items-center justify-center bg-[#FCEEEE] rounded-full'>
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      fill='none'
+                      viewBox='0 0 24 24'
+                      strokeWidth={1.5}
+                      stroke='currentColor'
+                      className='w-8 h-8 text-[#D14343] flex items-center justify-center'
+                    >
+                      <path
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                        d='M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z'
+                      />
+                    </svg>
+                  </div>
+                </div>
               </div>
-              <div className='flex'>
-                <button
-                  onClick={onCLickOpen}
-                  className='hover:border-[#c8c8d1] flex items-center mr-3 border-[1px] border-[#e7e7ee] rounded-lg px-3 text-[#6F749C] font-roboto '
-                >
-                  Закрыть
-                </button>
-                <button className='transition duration-[45ms] hover:bg-[#804eee] bg-[#6a30e7] py-1 flex items-center  rounded-lg px-3 text-white font-roboto font-medium'>
-                  Добавить
-                </button>
-              </div>
+              <span className='mb-5 flex justify-center items-center font-roboto text-xl font-medium'>
+                Удалить?
+              </span>
+              <span className='flex justify-center items-center text-center font-roboto text-base font-normal'>
+                Вы уверены что хотите удалить заметку? Данное действие невозможно будет отменить.
+              </span>
             </div>
+          </div>
+          <div className=' w-full h-[100px] bg-[#F7F7F7] rounded-b-[9px] flex items-center justify-center'>
+            <button
+              onClick={() => setOpenDeleteTask(false)}
+              className=' mr-5 flex items-center justify-center bg-white hover:bg-slate-100 rounded-md px-7 py-3 font-roboto shadow-md'
+            >
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                fill='none'
+                viewBox='0 0 24 24'
+                strokeWidth={1.5}
+                stroke='currentColor'
+                className='w-6 h-6 mr-5'
+              >
+                <path strokeLinecap='round' strokeLinejoin='round' d='M6 18L18 6M6 6l12 12' />
+              </svg>
+              Отменить
+            </button>
+            <button
+              onClick={() => onClickDeleteTask()}
+              className=' mr-5 flex items-center justify-center bg-[#D14343] text-white hover:bg-red-700 rounded-md px-7 py-3 font-roboto shadow-md'
+            >
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                fill='none'
+                viewBox='0 0 24 24'
+                strokeWidth={1.5}
+                stroke='currentColor'
+                className='w-6 h-6 mr-5'
+              >
+                <path
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                  d='M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0'
+                />
+              </svg>
+              Удалить
+            </button>
           </div>
         </div>
       </div>

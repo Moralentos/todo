@@ -5,10 +5,12 @@ import ModalDeleteCardWarning from '../components/ModalDeleteCardWarning';
 import axios from 'axios';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { addNote } from '../Redux/NoteCardSlice';
+import { fetchNotes } from '../Redux/NoteCardSlice';
 
 const Notes = () => {
-  const [isOpen, setOpen] = React.useState(false);
+  const [isOpenAddTask, setOpenAddTask] = React.useState(false);
+  const [isOpenDeleteTask, setOpenDeleteTask] = React.useState(false);
+  const [taskId, setTaskId] = React.useState();
   const [isOpenSort, setOpenSort] = React.useState(false);
   const [isMounted, setMounted] = React.useState(false);
   const dispatch = useDispatch();
@@ -16,26 +18,22 @@ const Notes = () => {
   const { note } = useSelector((state) => state.cardSlice);
 
   React.useEffect(() => {
-    if (isOpen) {
+    if (isOpenAddTask) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'auto';
     }
-  }, [isOpen]);
+  }, [isOpenAddTask]);
 
   React.useEffect(() => {
-    if (isMounted === false ?? note.length === 0) {
-      const fetchNotes = async () => {
-        const { data } = await axios.get('https://6507260b3a38daf4803f2b7c.mockapi.io/todo');
-        dispatch(addNote(data));
-      };
-      fetchNotes();
-      setMounted(true);
+    if (!isMounted) {
+      dispatch(fetchNotes());
     }
-  }, [isMounted, note, dispatch]);
+    setMounted(true);
+  }, [note]);
 
   const onCLickOpen = () => {
-    isOpen === true ? setOpen(false) : setOpen(true);
+    isOpenAddTask === true ? setOpenAddTask(false) : setOpenAddTask(true);
   };
 
   return (
@@ -109,7 +107,11 @@ const Notes = () => {
           </div>
         </div>
         {note.map((obj) => (
-          <NoteCard obj={obj}></NoteCard>
+          <NoteCard
+            setTaskId={setTaskId}
+            setOpenDeleteTask={setOpenDeleteTask}
+            obj={obj}
+          ></NoteCard>
         ))}
         <div className='completed'>
           <div className='-notes font-roboto my-3 font-meidum text-[#343a40]'>Выполненные</div>
@@ -161,7 +163,14 @@ const Notes = () => {
           </div>
         </div>
       </div>
-      {isOpen && <ModalNote onCLickOpen={onCLickOpen}></ModalNote>}
+      {isOpenAddTask && <ModalNote onCLickOpen={onCLickOpen}></ModalNote>}
+      {isOpenDeleteTask && (
+        <ModalDeleteCardWarning
+          taskId={taskId}
+          setOpenDeleteTask={setOpenDeleteTask}
+          obj={note}
+        ></ModalDeleteCardWarning>
+      )}
     </div>
   );
 };

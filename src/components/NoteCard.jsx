@@ -9,8 +9,14 @@ import ProjectCategory from '../assets/svg/projectCategory';
 import FavCategory from '../assets/svg/favCategory';
 import IdeaCategory from '../assets/svg/ideaCategory';
 
-const NoteCard = ({ obj }) => {
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchNotes } from '../Redux/NoteCardSlice';
+
+import axios from 'axios';
+
+const NoteCard = ({ obj, setOpenDeleteTask, setTaskId }) => {
   const [isOpen, setOpen] = React.useState(false);
+  const dispatch = useDispatch();
 
   const categoryList = [
     ['Работа', <JobCategory w={5} h={5}></JobCategory>],
@@ -23,9 +29,27 @@ const NoteCard = ({ obj }) => {
     ['Идеи', <IdeaCategory w={5} h={5}></IdeaCategory>], //
   ];
 
+  const taskOptionList = ['Редактировать', 'Приоритет', 'Удалить'];
+
   const getSvgWithCategory = (obj) => {
     const arr = categoryList.find((item) => item[0] === obj.noteCategory);
     return arr[1];
+  };
+
+  const onClickOptionTask = async (index, obj) => {
+    switch (index) {
+      case 0:
+        return 0;
+      case 1:
+        return 1;
+      case 2:
+        setTaskId(obj.id);
+        setOpenDeleteTask(true);
+
+        break;
+      default:
+        return;
+    }
   };
 
   return (
@@ -41,39 +65,36 @@ const NoteCard = ({ obj }) => {
           <div className='note-card-text__text-block '>
             <h3 className='font-roboto font-medium text-[#0D0D17] flex justify-between'>
               {obj.inputTitleValue}{' '}
-              <button
-                onClick={() => setOpen(!isOpen)}
-                className='text-xl text-[#6F749C] hover:text-[#565a77] mr-2 relative'
-              >
-                •••
+              <div className='relative'>
+                <button
+                  onClick={() => setOpen(!isOpen)}
+                  className='text-xl text-[#6F749C] hover:text-[#565a77] mr-2 relative'
+                >
+                  •••
+                </button>
                 {isOpen && (
-                  <div className=' absolute w-[150px]  bg-white right-7 top-0 rounded-xl shadow-xl'>
-                    <ul className='font-roboto flex flex-col p-2 text-lg text-[#6F749C] font-normal'>
-                      <li className=''>
-                        <button
-                          onClick={() => console.log('edit')}
-                          className='hover:text-[#0D0D17] p-1'
-                        >
-                          Редактировать
-                        </button>
-                      </li>
-                      <li className=''>
-                        <button
-                          onClick={() => console.log('priority')}
-                          className='hover:text-[#0D0D17] p-1'
-                        >
-                          Приоритет
-                        </button>
-                      </li>
-                      <li>
-                        <button onClick={() => console.log('delete')} className=' text-red-500 p-1'>
-                          Удалить
-                        </button>
-                      </li>
+                  <div className=' absolute w-[150px]  bg-white right-10 top-0 rounded-xl shadow-xl'>
+                    <ul className='font-roboto flex flex-col  text-lg text-[#6F749C] font-normal'>
+                      {taskOptionList.map((item, index) => {
+                        return (
+                          <li key={index} className=''>
+                            <button
+                              onClick={() => (onClickOptionTask(index, obj), setOpen(!isOpen))}
+                              className={
+                                index === 2
+                                  ? 'text-[red] p-1 hover:text-[#c51212] w-full'
+                                  : 'hover:text-[#0D0D17] p-1 w-full'
+                              }
+                            >
+                              {item}
+                            </button>
+                          </li>
+                        );
+                      })}
                     </ul>
                   </div>
                 )}
-              </button>
+              </div>
             </h3>
             <p className='text-[#6F749C] text-lsfont-roboto'>{obj.inputDescValue}</p>
           </div>
