@@ -10,7 +10,7 @@ import FavCategory from '../assets/svg/favCategory';
 import IdeaCategory from '../assets/svg/ideaCategory';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchNotes } from '../Redux/NoteCardSlice';
+import { fetchNotesCheckedChange, fetchNotes } from '../Redux/NoteCardSlice';
 
 import axios from 'axios';
 
@@ -52,12 +52,23 @@ const NoteCard = ({ obj, setOpenDeleteTask, setTaskId }) => {
     }
   };
 
+  const handleCheckedChange = async (event) => {
+    await fetchNotesCheckedChange(obj.id, event.target.checked);
+    dispatch(fetchNotes());
+  };
+
   return (
     <div className='note-card border-[1px] border-[#F3F3F8]  mt-2 rounded-md px-2 hover:border-[#0760fb2d]'>
       <div className='my-3 flex'>
         <div className='pr-2 '>
           <label class='custom-checkbox'>
-            <input type='checkbox' class='hidden' />
+            <input
+              type='checkbox'
+              class='hidden'
+              checked={obj.checked === true ? 'checked' : ''}
+              onChange={(event) => handleCheckedChange(event)}
+              onClick={() => dispatch(fetchNotes)}
+            />
             <span class='checkmark'></span>
           </label>
         </div>

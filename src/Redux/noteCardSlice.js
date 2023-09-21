@@ -7,6 +7,21 @@ export const fetchNotes = createAsyncThunk('note/fetchNoteList', async () => {
   return data;
 });
 
+export const fetchNotesCheckedChange = async (id, data) => {
+  const itemData = {
+    checked: data,
+  };
+  try {
+    const response = await axios.put(
+      `https://6507260b3a38daf4803f2b7c.mockapi.io/todo/${id}`,
+      itemData,
+    );
+    console.log('Обновление успешно:', response.data);
+  } catch (error) {
+    console.error('Ошибка при обновлении:', error);
+  }
+};
+
 const initialState = {
   note: [],
   status: false,
