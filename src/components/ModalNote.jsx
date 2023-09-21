@@ -54,7 +54,7 @@ const ModalNote = ({ onCLickOpen }) => {
   const [startDate, setStartDate] = useState(false);
   const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
     <button
-      className='hover:border-[#c8c8d1] py-1 flex items-center mr-3 border-[1px] border-[#e7e7ee] rounded-lg px-3 text-[#6F749C] font-roboto '
+      className='hover:border-[#c8c8d1] py-1 flex justify-center items-center ml-4  mr-3 border-[1px] border-[#e7e7ee] rounded-lg px-3 text-[#6F749C] font-roboto '
       onClick={onClick}
       ref={ref}
     >
@@ -91,20 +91,20 @@ const ModalNote = ({ onCLickOpen }) => {
 
   return (
     <>
-      <div className='opacity-80 bg-slate-900 w-full h-[100vh] fixed right-0 top-0 overflow-hidden flex flex-col items-center justify-center '></div>
-      <div className='z-1 w-full h-[100vh] fixed right-0 bottom-[10rem] overflow-hidden flex flex-col items-center justify-center '>
-        <div className='content rounded-xl  w-[600px] bg-[#FFFFFF] p-6 flex justify-between  '>
-          <div className='w-full'>
+      <div className='opacity-80  bg-slate-900 w-full h-[100vh] fixed right-0 top-0 overflow-hidden flex flex-col items-center justify-center '></div>
+      <div className=''>
+        <div className='content fixed top-20 left-0 right-0 px-5 pt-2 pb-5 max-w-[600px] bg-[#FFFFFF] mx-auto rounded-xl drop-shadow-xl '>
+          <div className=''>
             <div className='flex flex-col w-full'>
               <input
                 placeholder='Название записи...'
-                className='font-roboto w-auto outline-none focus:outline-none text-xl'
+                className='font-roboto  outline-none focus:outline-none text-xl'
                 type='text'
                 onChange={handleInputTitleValue}
               />
               <div className='h-[1px] w-full bg-[#F3F3F8] my-3'></div>
               <textarea
-                className='font-roboto resize-none w-full focus:outline-none text-sm'
+                className='font-roboto resize-none focus:outline-none text-sm'
                 placeholder='Описание...'
                 name=''
                 id=''
@@ -114,8 +114,8 @@ const ModalNote = ({ onCLickOpen }) => {
               ></textarea>
             </div>
 
-            <div className='flex justify-between items-center mt-2'>
-              <div className='flex'>
+            <div className='flex sm:flex-col justify-between mt-2'>
+              <div className='flex items-center w-full justify-center sm:mb-3'>
                 <DatePicker
                   dateFormat='dd.MM.yyyy'
                   selected={startDate}
@@ -123,10 +123,10 @@ const ModalNote = ({ onCLickOpen }) => {
                   customInput={<ExampleCustomInput />}
                   renderDayContents={(day, date) => <span className='font-roboto'>{day}</span>}
                 />
-                <div className='relative'>
+                <div className=''>
                   <button
                     onClick={() => setOpen(!isOpen)}
-                    className=' py-1 hover:border-[#c8c8d1] flex items-center mr-3 border-[1px] border-[#e7e7ee] rounded-lg px-3 text-[#6F749C] font-roboto '
+                    className=' py-1 hover:border-[#c8c8d1] w-full flex items-center mr-3 border-[1px] border-[#e7e7ee] rounded-lg px-3 text-[#6F749C] font-roboto '
                   >
                     {category === false ? (
                       <>
@@ -140,26 +140,28 @@ const ModalNote = ({ onCLickOpen }) => {
                     )}
                   </button>
                   {isOpen && (
-                    <div className=' absolute w-[150px]  bg-white right-0 top-[40px] rounded-xl shadow-2xl'>
-                      <ul className='font-roboto flex flex-col py-2 text-lg text-[#6F749C] font-normal'>
-                        {categoryList.map((item, key) => {
-                          return (
-                            <li key={key} className=''>
-                              <button
-                                onClick={() => handleCategoryBtn(item)}
-                                className='hover:text-[#0D0D17] p-1 w-full flex items-center justify-left'
-                              >
-                                <span className='mr-2'>{item[1]}</span> <span>{item[0]}</span>
-                              </button>
-                            </li>
-                          );
-                        })}
-                      </ul>
+                    <div className='absolute left-[-165px] sm:left-0 right-0 top-[190px] sm:mx-auto sm:top-[235px]'>
+                      <div className='  w-[150px]  bg-white left-[150px] right-0 top-[190px] mx-auto rounded-xl shadow-2xl'>
+                        <ul className='font-roboto flex flex-col py-2 text-lg text-[#6F749C] font-normal'>
+                          {categoryList.map((item, key) => {
+                            return (
+                              <li key={key} className=''>
+                                <button
+                                  onClick={() => handleCategoryBtn(item)}
+                                  className='hover:text-[#0D0D17] p-1 w-full flex items-center justify-left'
+                                >
+                                  <span className='mr-2'>{item[1]}</span> <span>{item[0]}</span>
+                                </button>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </div>
                     </div>
                   )}
                 </div>
               </div>
-              <div className='flex'>
+              <div className='flex items-center w-full justify-center'>
                 <button
                   onClick={onCLickOpen}
                   className='hover:border-[#c8c8d1] flex items-center mr-3 border-[1px] border-[#e7e7ee] rounded-lg py-1 px-3 text-[#6F749C] font-roboto '
@@ -187,7 +189,7 @@ const ModalNote = ({ onCLickOpen }) => {
                   }}
                   className='transition duration-[45ms] hover:bg-[#804eee] bg-[#6a30e7] py-1 flex items-center  rounded-lg px-3 text-white font-roboto font-medium'
                 >
-                  {addTaskBtn === false ? 'Добавить' : <span class='loader mx-4 py-1'></span>}
+                  {addTaskBtn === false ? 'Добавить' : <span class='loader mx-8 my-2'></span>}
                 </button>
               </div>
             </div>

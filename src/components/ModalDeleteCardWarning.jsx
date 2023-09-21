@@ -26,10 +26,10 @@ const ModalNote = ({ setOpenDeleteTask, obj, taskId }) => {
 
   return (
     <>
-      <div className='opacity-80 bg-slate-900 w-full h-[100vh] fixed right-0 top-0 overflow-hidden flex flex-col items-center justify-center '></div>
-      <div className='z-12 w-full h-[100vh] fixed right-0 bottom-[10rem] overflow-hidden flex flex-col items-center justify-center '>
-        <div className='content rounded-xl  w-[450px] bg-[#FFFFFF]'>
-          <div className='content rounded-xl  w-[450px] bg-[#FFFFFF] p-6   '>
+      <div className='opacity-80  bg-slate-900 w-full h-[100vh] fixed right-0 top-0 overflow-hidden flex flex-col items-center justify-center '></div>
+      <div className=''>
+        <div className='content fixed top-20 right-0 left-0 mx-auto rounded-xl  max-w-[450px] bg-[#FFFFFF]'>
+          <div className='content   rounded-xl  max-w-[450px] bg-[#FFFFFF] p-6   '>
             <div className='items-center flex-row justify-center'>
               <div className='flex items-center justify-center'>
                 <div className='mb-5 w-[80px] h-[80px] flex items-center justify-center bg-[#FDF4F4] rounded-full'>
@@ -59,10 +59,10 @@ const ModalNote = ({ setOpenDeleteTask, obj, taskId }) => {
               </span>
             </div>
           </div>
-          <div className=' w-full h-[100px] bg-[#F7F7F7] rounded-b-[9px] flex items-center justify-center'>
+          <div className=' w-full min-h-[130px] bg-[#F7F7F7F7] rounded-b-[9px] flex sm:block sm:pt-3 items-center justify-center'>
             <button
               onClick={() => setOpenDeleteTask(false)}
-              className=' mr-5 flex items-center justify-center bg-white hover:bg-slate-100 rounded-md px-7 py-3 font-roboto shadow-md'
+              className=' mr-5 flex items-center justify-center sm:mx-auto sm:mb-2  bg-white hover:bg-slate-100 rounded-md px-7 py-3 font-roboto shadow-md'
             >
               <svg
                 xmlns='http://www.w3.org/2000/svg'
@@ -78,7 +78,7 @@ const ModalNote = ({ setOpenDeleteTask, obj, taskId }) => {
             </button>
             <button
               onClick={() => onClickDeleteTask()}
-              className=' mr-5 flex items-center justify-center bg-[#D14343] text-white hover:bg-red-700 rounded-md px-7 py-3 font-roboto shadow-md'
+              className=' mr-5 sm:mx-auto flex items-center justify-center bg-[#D14343] text-white hover:bg-red-700 rounded-md px-7 py-3 font-roboto shadow-md'
             >
               <svg
                 xmlns='http://www.w3.org/2000/svg'

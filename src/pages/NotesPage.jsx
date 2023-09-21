@@ -106,11 +106,12 @@ const Notes = () => {
             </div>
           </div>
         </div>
-        {note.map((obj) => (
+        {note.map((obj, index) => (
           <NoteCard
             setTaskId={setTaskId}
             setOpenDeleteTask={setOpenDeleteTask}
             obj={obj}
+            key={index}
           ></NoteCard>
         ))}
         <div className='completed'>

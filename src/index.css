@@ -85,8 +85,8 @@ code {
 
 /* LOADER ADD TASK */
 .loader {
-  padding-top: 0.25rem /* 4px */;
-  padding-bottom: 0.25rem /* 4px */;
+  /* padding-top: 4px 
+  padding-bottom: 4px  */
 
   width: 9px;
   height: 9px;

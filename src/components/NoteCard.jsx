@@ -53,7 +53,7 @@ const NoteCard = ({ obj, setOpenDeleteTask, setTaskId }) => {
   };
 
   return (
-    <div className='note-card border-[1px] border-[#F3F3F8] mt-2 rounded-md px-2 hover:border-[#0760fb2d]'>
+    <div className='note-card border-[1px] border-[#F3F3F8]  mt-2 rounded-md px-2 hover:border-[#0760fb2d]'>
       <div className='my-3 flex'>
         <div className='pr-2 '>
           <label class='custom-checkbox'>
