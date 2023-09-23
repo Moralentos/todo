@@ -10,13 +10,23 @@ import FavCategory from '../assets/svg/favCategory';
 import IdeaCategory from '../assets/svg/ideaCategory';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchNotesCheckedChange, fetchNotes } from '../Redux/NoteCardSlice';
+import { fetchNotesCheckedChange, fetchNotes, fetchPriorityChange } from '../Redux/NoteCardSlice';
+import {
+  setEditTask,
+  setEditToggle,
+  setOpenAddTask,
+  setInputTitle,
+  setDescTitle,
+  setDateEdit,
+  setNoteCategoryEdit,
+} from '../Redux/EditTaskSlice';
 
 import axios from 'axios';
 
-const NoteCard = ({ obj, setOpenDeleteTask, setTaskId }) => {
+const NoteCard = ({ obj, setOpenDeleteTask, setTaskId, onCLickOpen }) => {
   const [isOpen, setOpen] = React.useState(false);
   const dispatch = useDispatch();
+  const { task } = useSelector((state) => state.taskSlice);
 
   const categoryList = [
     ['Работа', <JobCategory w={5} h={5}></JobCategory>],
@@ -35,13 +45,22 @@ const NoteCard = ({ obj, setOpenDeleteTask, setTaskId }) => {
     const arr = categoryList.find((item) => item[0] === obj.noteCategory);
     return arr[1];
   };
-
   const onClickOptionTask = async (index, obj) => {
     switch (index) {
       case 0:
-        return 0;
+        dispatch(setEditTask(obj));
+        dispatch(setEditToggle(true));
+        dispatch(setOpenAddTask());
+        dispatch(setInputTitle(obj.inputTitleValue));
+        dispatch(setDescTitle(obj.inputDescValue));
+        dispatch(setDateEdit(obj.date));
+        dispatch(setNoteCategoryEdit(obj.noteCategory));
+        // onCLickOpen();
+        break;
       case 1:
-        return 1;
+        await fetchPriorityChange(obj.id, !obj.priority);
+        dispatch(fetchNotes());
+        break;
       case 2:
         setTaskId(obj.id);
         setOpenDeleteTask(true);
@@ -58,7 +77,13 @@ const NoteCard = ({ obj, setOpenDeleteTask, setTaskId }) => {
   };
 
   return (
-    <div className='note-card border-[1px] border-[#F3F3F8]  mt-2 rounded-md px-2 hover:border-[#0760fb2d]'>
+    <div
+      className={
+        obj.priority === true && obj.checked === false
+          ? 'note-card border-[1px] border-[#0760FB]  mt-2 rounded-md px-2 hover:border-[#5090ff]'
+          : 'note-card border-[1px] border-[#F3F3F8]  mt-2 rounded-md px-2 hover:border-[#0760fb2d]'
+      }
+    >
       <div className='my-3 flex'>
         <div className='pr-2 '>
           <label class='custom-checkbox'>
@@ -67,7 +92,6 @@ const NoteCard = ({ obj, setOpenDeleteTask, setTaskId }) => {
               class='hidden'
               checked={obj.checked === true ? 'checked' : ''}
               onChange={(event) => handleCheckedChange(event)}
-              onClick={() => dispatch(fetchNotes)}
             />
             <span class='checkmark'></span>
           </label>
@@ -97,7 +121,17 @@ const NoteCard = ({ obj, setOpenDeleteTask, setTaskId }) => {
                                   : 'hover:text-[#0D0D17] p-1 w-full'
                               }
                             >
-                              {item}
+                              {item}{' '}
+                              {index === 1 && obj.priority === true ? (
+                                <span className=''>-</span>
+                              ) : (
+                                ''
+                              )}
+                              {index === 1 && obj.priority === false ? (
+                                <span className=''>+</span>
+                              ) : (
+                                ''
+                              )}
                             </button>
                           </li>
                         );

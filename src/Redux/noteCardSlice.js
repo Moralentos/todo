@@ -22,6 +22,21 @@ export const fetchNotesCheckedChange = async (id, data) => {
   }
 };
 
+export const fetchPriorityChange = async (id, data) => {
+  const itemData = {
+    priority: data,
+  };
+  try {
+    const response = await axios.put(
+      `https://6507260b3a38daf4803f2b7c.mockapi.io/todo/${id}`,
+      itemData,
+    );
+    console.log('Обновление приоритета успешно:', response.data);
+  } catch (error) {
+    console.error('Ошибка при обновлении:', error);
+  }
+};
+
 const initialState = {
   note: [],
   status: false,
@@ -47,6 +62,10 @@ export const noteCardSlice = createSlice({
       .addCase(fetchNotes.fulfilled, (state, action) => {
         console.log('ОК');
         state.note = action.payload;
+
+        state.note.sort((a, b) => b.priority - a.priority);
+
+        console.log(state.note);
         state.status = false;
       })
       .addCase(fetchNotes.rejected, (state, action) => {

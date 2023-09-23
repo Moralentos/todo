@@ -17,15 +17,26 @@ import IdeaCategory from '../assets/svg/ideaCategory';
 import axios from 'axios';
 
 import { fetchNotes } from '../Redux/NoteCardSlice';
+import { fetchNotesEdit } from '../Redux/EditTaskSlice';
+import {
+  setEditToggle,
+  setOpenAddTask,
+  setInputTitle,
+  setEditTask,
+  setDescTitle,
+  setDateEdit,
+  setNoteCategoryEdit,
+} from '../Redux/EditTaskSlice';
 
 const ModalNote = ({ onCLickOpen }) => {
   const dispatch = useDispatch();
   const [isOpen, setOpen] = React.useState(false);
-  const [inputTitleValue, setInputTitleValue] = React.useState('');
   const [inputDescValue, setInputDescValue] = React.useState('');
   const [addTaskBtn, setAddTaskBtn] = React.useState(false);
   const [category, setCategory] = React.useState(false);
   // const [categorySvg, setCategorySvg] = React.useState(false);
+  const { task, edit, openAddTask, inputTitle, inputDesc, dateEdit, noteCategoryEdit } =
+    useSelector((state) => state.taskSlice);
 
   const categoryList = [
     ['Работа', <JobCategory w={5} h={5}></JobCategory>],
@@ -72,21 +83,79 @@ const ModalNote = ({ onCLickOpen }) => {
           d='M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z'
         />
       </svg>
-      {startDate === false ? 'Дата' : value}
+      {edit === false
+        ? dateEdit === false
+          ? 'Дата'
+          : value
+        : startDate === false
+        ? dateEdit
+        : value}
     </button>
   ));
 
+  const sendData = async () => {
+    setAddTaskBtn(true);
+    const date = dateEdit;
+    const noteCategory = category[0];
+    // dispatch(addNote({ inputTitleValue, inputDescValue, date, noteCategory }));
+    const axiosData = {
+      inputTitleValue: inputTitle,
+      inputDescValue: inputDesc,
+      date: date,
+      noteCategory: noteCategory,
+      checked: false,
+      priority: false,
+    };
+    await sendDataToMockAPI(axiosData);
+    dispatch(fetchNotes());
+    setAddTaskBtn(false);
+    dispatch(setOpenAddTask());
+  };
+
   const handleInputTitleValue = (e) => {
-    return setInputTitleValue(e.target.value);
+    dispatch(setInputTitle(e.target.value));
   };
   const handleInputDescValue = (e) => {
-    return setInputDescValue(e.target.value);
+    dispatch(setDescTitle(e.target.value));
   };
 
   const handleCategoryBtn = (e) => {
     setOpen(false);
-    // setCategorySvg(e);
+    dispatch(setNoteCategoryEdit(e[0]));
+
     return setCategory(e);
+  };
+
+  const onClickCheckEdit = () => {
+    if (edit === true && openAddTask === true)
+      return (
+        dispatch(setEditToggle()),
+        dispatch(setOpenAddTask()),
+        dispatch(
+          setEditTask([]),
+          dispatch(setDateEdit(false)),
+          dispatch(setInputTitle('')),
+          dispatch(setDescTitle('')),
+          dispatch(setNoteCategoryEdit(false)),
+        )
+      );
+    if (openAddTask === true) return dispatch(setOpenAddTask());
+  };
+
+  const handleDateEdit = (date) => {
+    dispatch(setDateEdit(date.toLocaleDateString('ru-RU')));
+    setStartDate(date);
+  };
+
+  const dataToFetchEdit = async () => {
+    const itemData = {
+      inputTitleValue: inputTitle,
+      inputDescValue: inputDesc,
+      date: dateEdit,
+      noteCategory: noteCategoryEdit,
+    };
+    await fetchNotesEdit(task.id, itemData);
+    dispatch(fetchNotes());
   };
 
   return (
@@ -101,6 +170,7 @@ const ModalNote = ({ onCLickOpen }) => {
                 className='font-roboto  outline-none focus:outline-none text-xl'
                 type='text'
                 onChange={handleInputTitleValue}
+                value={inputTitle}
               />
               <div className='h-[1px] w-full bg-[#F3F3F8] my-3'></div>
               <textarea
@@ -111,6 +181,7 @@ const ModalNote = ({ onCLickOpen }) => {
                 cols='30'
                 rows='3'
                 onChange={handleInputDescValue}
+                value={inputDesc}
               ></textarea>
             </div>
 
@@ -119,7 +190,7 @@ const ModalNote = ({ onCLickOpen }) => {
                 <DatePicker
                   dateFormat='dd.MM.yyyy'
                   selected={startDate}
-                  onChange={(date) => setStartDate(date)}
+                  onChange={(date) => handleDateEdit(date)}
                   customInput={<ExampleCustomInput />}
                   renderDayContents={(day, date) => <span className='font-roboto'>{day}</span>}
                 />
@@ -129,10 +200,21 @@ const ModalNote = ({ onCLickOpen }) => {
                     className=' py-1 hover:border-[#c8c8d1] w-full flex items-center mr-3 border-[1px] border-[#e7e7ee] rounded-lg px-3 text-[#6F749C] font-roboto '
                   >
                     {category === false ? (
-                      <>
-                        <DefaultCategory w={5} h={5}></DefaultCategory>
-                        <span className='ml-2'>Категория</span>
-                      </>
+                      noteCategoryEdit === false ? (
+                        <>
+                          <DefaultCategory w={5} h={5}></DefaultCategory>
+                          <span className='ml-2'>Категория</span>
+                        </>
+                      ) : (
+                        <>
+                          {
+                            categoryList.find((item) => {
+                              return item[0] === noteCategoryEdit;
+                            })[1]
+                          }
+                          <span className='ml-2'>{noteCategoryEdit}</span>
+                        </>
+                      )
                     ) : (
                       <>
                         <span className='mr-2'>{category[1]}</span> <span>{category[0]}</span>
@@ -163,33 +245,26 @@ const ModalNote = ({ onCLickOpen }) => {
               </div>
               <div className='flex items-center w-full justify-center'>
                 <button
-                  onClick={onCLickOpen}
+                  onClick={() => onClickCheckEdit()}
                   className='hover:border-[#c8c8d1] flex items-center mr-3 border-[1px] border-[#e7e7ee] rounded-lg py-1 px-3 text-[#6F749C] font-roboto '
                 >
                   Закрыть
                 </button>
                 <button
                   onClick={async () => {
-                    setAddTaskBtn(true);
-                    const date = startDate.toLocaleDateString('ru-RU');
-                    const noteCategory = category[0];
-                    // dispatch(addNote({ inputTitleValue, inputDescValue, date, noteCategory }));
-                    const axiosData = {
-                      inputTitleValue: inputTitleValue,
-                      inputDescValue: inputDescValue,
-                      date: date,
-                      noteCategory: noteCategory,
-                      checked: false,
-                      priority: false,
-                    };
-                    await sendDataToMockAPI(axiosData);
-                    dispatch(fetchNotes());
-                    setAddTaskBtn(false);
-                    onCLickOpen();
+                    edit === false ? sendData() : dataToFetchEdit();
                   }}
                   className='transition duration-[45ms] hover:bg-[#804eee] bg-[#6a30e7] py-1 flex items-center  rounded-lg px-3 text-white font-roboto font-medium'
                 >
-                  {addTaskBtn === false ? 'Добавить' : <span class='loader mx-8 my-2'></span>}
+                  {addTaskBtn === false ? (
+                    edit === false ? (
+                      'Добавить'
+                    ) : (
+                      'Изменить'
+                    )
+                  ) : (
+                    <span class='loader mx-8 my-2'></span>
+                  )}
                 </button>
               </div>
             </div>
