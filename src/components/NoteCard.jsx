@@ -80,8 +80,8 @@ const NoteCard = ({ obj, setOpenDeleteTask, setTaskId, onCLickOpen }) => {
     <div
       className={
         obj.priority === true && obj.checked === false
-          ? 'note-card border-[1px] border-[#0760FB]  mt-2 rounded-md px-2 hover:border-[#5090ff]'
-          : 'note-card border-[1px] border-[#F3F3F8]  mt-2 rounded-md px-2 hover:border-[#0760fb2d]'
+          ? 'note-card border-[1px] border-[#0760FB]  mt-2 rounded-md px-2 hover:border-[#5090ff] test anim'
+          : 'note-card border-[1px] border-[#F3F3F8]  mt-2 rounded-md px-2 hover:border-[#0760fb2d] test anim'
       }
     >
       <div className='my-3 flex'>
@@ -108,7 +108,7 @@ const NoteCard = ({ obj, setOpenDeleteTask, setTaskId, onCLickOpen }) => {
                   •••
                 </button>
                 {isOpen && (
-                  <div className=' absolute w-[150px]  bg-white right-10 top-0 rounded-xl shadow-xl'>
+                  <div className=' absolute w-[150px]  bg-white right-10 top-0 rounded-xl shadow-xl test anim'>
                     <ul className='font-roboto flex flex-col  text-lg text-[#6F749C] font-normal'>
                       {taskOptionList.map((item, index) => {
                         return (

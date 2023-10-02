@@ -28,7 +28,7 @@ const ModalNote = ({ setOpenDeleteTask, obj, taskId }) => {
     <>
       <div className='opacity-80  bg-slate-900 w-full h-[100vh] fixed right-0 top-0 overflow-hidden flex flex-col items-center justify-center '></div>
       <div className=''>
-        <div className='content fixed top-20 right-0 left-0 mx-auto rounded-xl  max-w-[450px] bg-[#FFFFFF]'>
+        <div className='content fixed top-20 right-0 left-0 mx-auto rounded-xl  max-w-[450px] bg-[#FFFFFF] test anim'>
           <div className='content   rounded-xl  max-w-[450px] bg-[#FFFFFF] p-6   '>
             <div className='items-center flex-row justify-center'>
               <div className='flex items-center justify-center'>

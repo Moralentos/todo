@@ -148,6 +148,7 @@ const ModalNote = ({ onCLickOpen }) => {
   };
 
   const dataToFetchEdit = async () => {
+    setAddTaskBtn(true);
     const itemData = {
       inputTitleValue: inputTitle,
       inputDescValue: inputDesc,
@@ -156,13 +157,23 @@ const ModalNote = ({ onCLickOpen }) => {
     };
     await fetchNotesEdit(task.id, itemData);
     dispatch(fetchNotes());
+    dispatch(setEditToggle());
+    dispatch(setOpenAddTask());
+    setAddTaskBtn(false);
+    dispatch(
+      setEditTask([]),
+      dispatch(setDateEdit(false)),
+      dispatch(setInputTitle('')),
+      dispatch(setDescTitle('')),
+      dispatch(setNoteCategoryEdit(false)),
+    );
   };
 
   return (
     <>
       <div className='opacity-80  bg-slate-900 w-full h-[100vh] fixed right-0 top-0 overflow-hidden flex flex-col items-center justify-center '></div>
       <div className=''>
-        <div className='content fixed top-20 left-0 right-0 px-5 pt-2 pb-5 max-w-[600px] bg-[#FFFFFF] mx-auto rounded-xl drop-shadow-xl '>
+        <div className='content fixed top-20 left-0 right-0 px-5 pt-2 pb-5 max-w-[600px] bg-[#FFFFFF] mx-auto rounded-xl drop-shadow-xl test anim'>
           <div className=''>
             <div className='flex flex-col w-full'>
               <input
